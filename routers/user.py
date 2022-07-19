@@ -1,10 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from utils import schemas
-from dependencies import get_db, verify_password
+from dependencies import get_db, verify_password, create_access_token
 from database import crud
 
 router = APIRouter()
+
+
+@router.get("/user")
+def index():
+    return {
+        "message": "User route base point"
+    }
 
 
 @router.post("/user/register", response_model=schemas.UserOut)
@@ -14,22 +21,19 @@ def register_user(user: schemas.UserIn, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     new_user = crud.create_user(db=db, user=user)
+
     if not new_user:
         raise HTTPException(status_code=400, detail="Could not register user")
 
-    response = {"id": new_user.id, "email": new_user.email}
-
-    user_profile = crud.create_user_profile(
-        db=db, user=user, user_id=new_user.id)
-    if not user_profile:
-        raise HTTPException(
-            status_code=400, detail="Could not create user profile")
+    response = {"id": new_user.id, "email": new_user.email,
+                "first_name": new_user.first_name, "last_name": new_user.last_name}
 
     return response
 
 
 @router.post("/user/login")
 def login_user(user: schemas.UserLoginIn, db: Session = Depends(get_db)):
+
     db_user = crud.get_user_by_email(db, email=user.email)
     if not db_user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -37,7 +41,11 @@ def login_user(user: schemas.UserLoginIn, db: Session = Depends(get_db)):
     if not check_password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    return {"detail": "Logged in successfully"}
+    access_token = create_access_token(
+        {"user_id": db_user.id}
+    )
+
+    return {"access_token": access_token}
 
 
 @router.get("/user/{user_id}")

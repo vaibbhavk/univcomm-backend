@@ -1,5 +1,13 @@
 from pydantic import BaseModel
-import datetime
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    user_id: int | None = None
 
 
 class ItemBase(BaseModel):
@@ -35,13 +43,16 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
+
 class AdminIn(BaseModel):
     email: str
     password: str
 
+
 class AdminOut(BaseModel):
     id: int
     email: str
+
 
 class UserIn(BaseModel):
     email: str
@@ -49,18 +60,20 @@ class UserIn(BaseModel):
 
     first_name: str
     last_name: str
-    guardian: str
-    dob: datetime.date
-    address: str
-    contact: str
+
 
 class UserOut(BaseModel):
     id: int
     email: str
 
+    first_name: str
+    last_name: str
+
+
 class UserLoginIn(BaseModel):
     email: str
     password: str
+
 
 class UserList(BaseModel):
     user_list: list[User]

@@ -55,7 +55,8 @@ def create_admin(db: Session, admin: schemas.AdminIn):
 
 def create_user(db: Session, user: schemas.UserIn):
     hashed_password = generate_password_hash(user.password)
-    db_user = models.User(email=user.email, password=hashed_password)
+    db_user = models.User(email=user.email, password=hashed_password,
+                          first_name=user.first_name, last_name=user.last_name)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -63,8 +64,8 @@ def create_user(db: Session, user: schemas.UserIn):
 
 
 def create_user_profile(db: Session, user: schemas.UserIn, user_id: int):
-    db_user_detail = models.UserProfile(first_name=user.first_name, last_name=user.last_name, guardian=user. guardian,
-                                        dob=user.dob, address=user.address, contact=user.contact, user=user_id)
+    db_user_detail = models.UserProfile(
+        first_name=user.first_name, last_name=user.last_name, user=user_id)
     db.add(db_user_detail)
     db.commit()
     db.refresh(db_user_detail)

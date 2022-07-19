@@ -18,9 +18,11 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True)
     password = Column(String)
+    first_name = Column(String)
+    last_name = Column(String)
 
     profile = relationship(
-        "UserProfile", cascade = "all,delete", back_populates="owner", uselist=False)
+        "UserProfile", cascade="all,delete", back_populates="owner", uselist=False)
 
 
 class UserProfile(Base):
@@ -33,6 +35,7 @@ class UserProfile(Base):
     dob = Column(Date, nullable=False)
     address = Column(String, nullable=False)
     contact = Column(String(10), nullable=False)
-    user = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user = Column(Integer, ForeignKey(
+        "users.id", ondelete="CASCADE"), nullable=False)
 
     owner = relationship("User", back_populates="profile")
