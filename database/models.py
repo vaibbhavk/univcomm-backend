@@ -4,12 +4,12 @@ from sqlalchemy.orm import relationship
 from database.init_db import Base
 
 
-class Admin(Base):
-    __tablename__ = "admins"
+# class Admin(Base):
+#     __tablename__ = "admins"
 
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True)
-    password = Column(String)
+#     id = Column(Integer, primary_key=True, index=True)
+#     email = Column(String, unique=True)
+#     password = Column(String)
 
 
 class User(Base):
