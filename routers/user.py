@@ -16,7 +16,7 @@ def index():
     }
 
 
-@router.post("/register", response_model=schemas.UserOut)
+@router.post("/register/", response_model=schemas.UserOut)
 def register_user(user: schemas.UserIn, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -33,7 +33,7 @@ def register_user(user: schemas.UserIn, db: Session = Depends(get_db)):
     return response
 
 
-@router.post("/login")
+@router.post("/login/")
 def login_user(user: schemas.UserLoginIn, db: Session = Depends(get_db)):
 
     db_user = crud.get_user_by_email(db, email=user.email)
@@ -50,7 +50,7 @@ def login_user(user: schemas.UserLoginIn, db: Session = Depends(get_db)):
     return {"access_token": access_token}
 
 
-@router.get("/{user_id}")
+@router.get("/{user_id}/")
 def user_profile(user_id: int, db: Session = Depends(get_db)):
     db_user_profile = crud.get_user_profile_by_user_id(db, user_id=user_id)
 
@@ -60,7 +60,7 @@ def user_profile(user_id: int, db: Session = Depends(get_db)):
     return db_user_profile
 
 
-@router.delete("/{user_id}")
+@router.delete("/{user_id}/")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.delete_user_by_user_id(db, user_id=user_id)
 
